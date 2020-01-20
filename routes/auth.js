@@ -5,21 +5,21 @@ const jwt = require('jsonwebtoken')
 const User = require('../model/User')
 const { registrationValidation, loginValidation } = require('../validation')
 
-// USER REGISTRATION
+// ! USER REGISTRATION
 router.post('/register', async (req, res) => {
-  // CHECK VALIDATION
+  // ? CHECK VALIDATION
   const { error } = registrationValidation(req.body)
   if (error) return res.status(400).send(error.details[0].message)
 
-  // CHECK IF EMAIL ALREADY EXISTS
+  // ? CHECK IF EMAIL ALREADY EXISTS
   const emailExist = await User.findOne({ email: req.body.email })
   if (emailExist) return res.status(400).send('Email already exists')
 
-  // HASH THE PASSWORD
+  // ? HASH THE PASSWORD
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(req.body.password, salt)
 
-  // CREATE NEW USER
+  // ? CREATE NEW USER
   const user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -34,21 +34,21 @@ router.post('/register', async (req, res) => {
   }
 })
 
-// USER LOGIN
+// ! USER LOGIN
 router.post('/login', async (req, res) => {
-  // CHECK VALIDATION
+  // ? CHECK VALIDATION
   const { error } = loginValidation(req.body)
   if (error) return res.status(400).send(error.details[0].message)
 
-  // CHECK IF EMAIL ALREADY EXISTS
+  // ? CHECK IF EMAIL ALREADY EXISTS
   const user = await User.findOne({ email: req.body.email })
   if (!user) return res.status(400).send('Invalid email or password')
 
-  // PASSWORD VALIDATION
+  // ? PASSWORD VALIDATION
   const validPass = await bcrypt.compare(req.body.password, user.password)
   if (!validPass) return res.status(400).send('Invalid password')
 
-  //
+  // ? SEND TOKEN
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
   res.header('auth-token', token).send(token)
 })

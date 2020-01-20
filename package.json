@@ -7,7 +7,7 @@
     "start": "nodemon index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nuno Pereira",
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^16.1.8",
