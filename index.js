@@ -8,9 +8,14 @@ const helmet = require('helmet')
 const express = require('express')
 const mongoose = require('mongoose')
 
+const logger = require('./middlewares/logger')
+
 const PORT = process.env.PORT || 3333
 
 const app = express()
+
+// ! DEVELOPMENT LOGGER MIDDLEWARE
+app.use(logger)
 
 // ! DataBase CONNECT
 mongoose.connect(
