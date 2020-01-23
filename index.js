@@ -25,10 +25,8 @@ app.use(cors({ origin: 'http://localhost:3000' }))
 
 // ! ROUTES
 const authRoute = require('./routes/Auth')
-const postRoute = require('./routes/Posts')
 
 // ! ROUTE MIDDLEWARES
 app.use('/auth', authRoute)
-app.use('/', postRoute)
 
 app.listen(PORT, () => console.log(`Server up and running on port ${PORT}`))
