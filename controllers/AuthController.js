@@ -6,31 +6,31 @@ const { registrationValidation, loginValidation } = require('../utils/validation
 const User = require('../model/User')
 
 module.exports = {
-  async register (req, res) {
+  async register (request, response) {
     // ? CHECK VALIDATION
-    const { error } = registrationValidation(req.body)
-    if (error) return res.status(400).send(error.details[0].message)
+    const { error } = registrationValidation(request.body)
+    if (error) return response.status(400).send(error.details[0].message)
 
     // ? CHECK IF EMAIL ALREADY EXISTS
-    const emailExist = await User.findOne({ email: req.body.email })
-    if (emailExist) return res.status(400).send('Email already exists')
+    const emailExist = await User.findOne({ email: request.body.email })
+    if (emailExist) return response.status(400).send('Email already exists')
 
     // ? HASH THE PASSWORD
     const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(req.body.password, salt)
+    const hashedPassword = await bcrypt.hash(request.body.password, salt)
 
     // ? CREATE NEW USER
     const user = new User({
-      name: req.body.name,
-      email: req.body.email,
+      name: request.body.name,
+      email: request.body.email,
       password: hashedPassword
     })
 
     try {
       const savedUser = await user.save()
-      res.send({ user: user._id })
-    } catch (err) {
-      res.status(400).send(err)
+      response.send(savedUser)
+    } catch (error) {
+      response.status(400).send(error)
     }
   },
 
@@ -49,6 +49,10 @@ module.exports = {
 
     // ? SEND TOKEN
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
-    res.header('auth-token', token).send(token)
+
+    res.header('auth-token', token).send({
+      userId: user._id,
+      token: token
+    })
   }
 }
