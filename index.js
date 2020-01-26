@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3333
 const app = express()
 
 // ! DEVELOPMENT LOGGER MIDDLEWARE
-app.use(logger)
+// ! app.use(logger)
 
 // ! DataBase CONNECT
 mongoose.connect(
