@@ -8,7 +8,7 @@ const helmet = require('helmet')
 const express = require('express')
 const mongoose = require('mongoose')
 
-const logger = require('./middlewares/logger')
+const logger = require('./middlewares/Logger')
 
 const PORT = process.env.PORT || 3333
 
