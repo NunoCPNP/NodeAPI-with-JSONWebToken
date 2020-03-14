@@ -8,31 +8,31 @@ const helmet = require('helmet')
 const express = require('express')
 const mongoose = require('mongoose')
 
-// ! const logger = require('./middlewares/Logger')
+const logger = require('./middlewares/Logger')
 
 const PORT = process.env.PORT || 3333
 
 const app = express()
 
-// ! DEVELOPMENT LOGGER MIDDLEWARE
-// ! app.use(logger)
+//* DEVELOPMENT LOGGER MIDDLEWARE
+app.use(logger)
 
-// ! DataBase CONNECT
+//* DataBase CONNECT
 mongoose.connect(
-  process.env.DB_CONNECT,
+  `${process.env.DB_CONNECT}`,
   { useNewUrlParser: true, useUnifiedTopology: true },
   () => console.log('Connected to DataBase'))
 
-// ! MIDDLEWARES
+//* MIDDLEWARES
 app.use(express.json())
 app.use(helmet())
 app.use(cors({ origin: 'http://localhost:3000' }))
 
-// ! ROUTES
+//* ROUTES
 const authRoute = require('./routes/Auth')
 const projectsRoute = require('./routes/Projects')
 
-// ! ROUTE MIDDLEWARES
+//* ROUTE MIDDLEWARES
 app.use('/auth', authRoute)
 app.use('/projects', projectsRoute)
 
